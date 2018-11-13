@@ -19,6 +19,6 @@ def_sim=function(k=0.6, n=100, years=1)
     L=exp(-r*(years-t))
     return(c(moment_stopu=any(A<L),merton=last(A<L)))
 }
-simulation=(sapply(1:N, function(x) def_sim()))%>%t
+simulation=(sapply(1:N, function(x) def_sim()))%>%t%>%colMeans
 colMeans(simulation)
-
+k1=seq(0,1,by=0.1)
