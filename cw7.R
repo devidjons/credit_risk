@@ -33,3 +33,20 @@ solution = sapply(1:dim(dane)[1], function(x)
     multiroot(function(y)
         f1(y, n = x), start = c(60000, 0.1))$root) %>% t
 
+data_output = data.frame(
+    A = solution[,1],
+    sp = dane$sp,
+    r = dane$r,
+    L = dane$L,
+    sigma= solution[,2]
+)
+data_output %>% mutate(m_reg = log(lead(.$A) / .$A) - r,
+                       sp_reg = log(lead(.$sp) / .$sp) - r) -> data_output
+beta = lm(m_reg ~ sp_reg - 1, data = data_output)$coef
+data_output$m = data_output$r + beta * data_output$sp_reg
+data_output %>% 
+    mutate(DD = (log(A / L) + (m - 1 / 2 * sigma ^ 2)) / sigma) %>%
+    select(DD) %>%
+    as.matrix -> DD
+plot(DD, type= "l")
+
