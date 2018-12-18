@@ -24,10 +24,12 @@ B_fun=function(r, n)
     t=n*dt
     t2=r$t[r$t>=t]%>%min
     r2=r$R[r$t==t2]
-    return((1+r2*dt)^(n))
+    return((1+r2*dt)^(-n))
 #     
 }
 
 p = (B - D) / ((1 - u) * sum((1:n) * kupon((1:n)*dt) * sapply(1:n, function(x)
-    B_fun(r, dt * x))))
+    B_fun(r, x))))
 
+#method2
+root=uniroot(function(x) (B-D)-)
