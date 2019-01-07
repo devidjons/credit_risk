@@ -3,7 +3,7 @@ library(dplyr)
 u=0.4
 Time=7
 dt=1/2
-n=T/dt
+n=Time/dt
 nom=100
 kupon=function(t)
 {
@@ -17,19 +17,23 @@ r = data.frame(
     R = 0.01 * c(5.56, 5.64, 5.68, 5.64, 5.62, 5.66, 5.76)
 )
 #method 1
-B_fun=function(r, n)
- {
-#     t1=r$t[r$t<=t]%>%max
-#     r1=r$R[r$t==t1]
-    t=n*dt
-    t2=r$t[r$t>=t]%>%min
-    r2=r$R[r$t==t2]
-    return((1+r2*dt)^(-n))
-#     
+B_fun = function(r, n)
+{
+    #     t1=r$t[r$t<=t]%>%max
+    #     r1=r$R[r$t==t1]
+    t = n * dt
+    t2 = r$t[r$t >= t] %>% min
+    r2 = r$R[r$t == t2]
+    return((1 + r2 * dt) ^ (-n))
+    #
 }
 
 p = (B - D) / ((1 - u) * sum((1:n) * kupon((1:n)*dt) * sapply(1:n, function(x)
     B_fun(r, x))))
 
 #method2
-root=uniroot(function(x) (B-D)-)
+root=uniroot(function(x) (B-D)-(1-u)*sum(kupon((1:n)*dt) * sapply(1:n, function(x)
+    B_fun(r, x))*(1-x^(1:n))), interval = c(0,1))$root
+par(mfrow=c(1,2))
+plot(p*1:n)
+plot(1-root^(1:n))
